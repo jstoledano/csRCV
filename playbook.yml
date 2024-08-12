@@ -1,0 +1,32 @@
+- hosts: all
+  become: true
+  become_method: sudo
+
+  tasks:
+    - name: Actualizar el manifiesto
+      apt: 
+        update_cache: yes
+        upgrade: yes
+        cache_valid_time: 86400
+
+    - name: Instalar Aptitude
+      apt:
+        name: ['aptitude']
+        state: present
+      tags:
+        - packages
+
+    - name: Instalar paquetes de Ubuntu
+      apt: 
+        name: ["debconf-utils", "python3-pip",  "python3-venv","python-dev", "libpq-dev", "ntp", "htop", "postgresql-client"]
+        state: present
+      tags:
+        - packages
+
+    - name: Actualizar pip
+      pip:
+        state: latest
+        requirements: /vagrant/requirements.txt
+        virtualenv: /home/vagrant/venv
+        virtualenv: /home/vagrant/venv
+        virtualenv_command: /usr/bin/python3 -m venv
